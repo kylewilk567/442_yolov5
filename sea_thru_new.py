@@ -9,10 +9,10 @@ import io
 
 import numpy as np
 import PIL.Image as pil
-import matplotlib as mpl
-import matplotlib.cm as cm
-import pynng
-from pynng import nng
+# import matplotlib as mpl
+# import matplotlib.cm as cm
+# import pynng
+# from pynng import nng
 
 import torch
 from torchvision import transforms, datasets

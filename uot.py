@@ -9,7 +9,7 @@ import subprocess
 # And be thoroughly checked that label files are correct.
 
 # Recommendation: Test training on a small subset of classes and check performance on that before expanding to ALL 21 classes.
-
+do_preprocess = False # Global variable to toggle preprocessing on/off
 classes = [  
   'Ballena',
   'BlueFish',
@@ -92,9 +92,10 @@ def create_dataset(root_dir, output_dir, split_ratio=[0.6, 0.2, 0.2]):
                     img = img.resize((new_width, new_height))
                     # Save resized img
                     img.save(os.path.join(output_dir, 'images', 'train', f'{i}.jpg'))
-                    subprocess.run(["python3", "sea_thru_new.py", "--image",
-                                     os.path.join(output_dir, 'images', 'train', f'{i}.jpg'),
-                                     "--output", os.path.join(output_dir, 'images', 'train', f'{i}.jpg')])
+                    if do_preprocess:
+                        subprocess.run(["python3", "sea_thru_new.py", "--image",
+                                        os.path.join(output_dir, 'images', 'train', f'{i}.jpg'),
+                                        "--output", os.path.join(output_dir, 'images', 'train', f'{i}.jpg')])
                     #shutil.copyfile(image_files[idx], os.path.join(output_dir, 'images', 'train', f'{i}.jpg'))
 
         with open(os.path.join(output_dir, 'labels', 'train', f'{i}.txt'), 'w') as f:
@@ -122,9 +123,10 @@ def create_dataset(root_dir, output_dir, split_ratio=[0.6, 0.2, 0.2]):
                     img = img.resize((new_width, new_height))
                     # Save resized img
                     img.save(os.path.join(output_dir, 'images', 'val', f'{i}.jpg'))
-                    subprocess.run(["python3", "sea_thru_new.py", "--image",
-                                     os.path.join(output_dir, 'images', 'val', f'{i}.jpg'),
-                                     "--output", os.path.join(output_dir, 'images', 'val', f'{i}.jpg')])
+                    if do_preprocess:
+                        subprocess.run(["python3", "sea_thru_new.py", "--image",
+                                        os.path.join(output_dir, 'images', 'val', f'{i}.jpg'),
+                                        "--output", os.path.join(output_dir, 'images', 'val', f'{i}.jpg')])
                     #shutil.copyfile(image_files[idx], os.path.join(output_dir, 'images', 'train', f'{i}.jpg'))
 
         with open(os.path.join(output_dir, 'labels', 'val', f'{i}.txt'), 'w') as f:
@@ -150,9 +152,10 @@ def create_dataset(root_dir, output_dir, split_ratio=[0.6, 0.2, 0.2]):
                     img = img.resize((new_width, new_height))
                     # Save resized img
                     img.save(os.path.join(output_dir, 'images', 'test', f'{i}.jpg'))
-                    subprocess.run(["python3", "sea_thru_new.py", "--image",
-                                     os.path.join(output_dir, 'images', 'test', f'{i}.jpg'),
-                                     "--output", os.path.join(output_dir, 'images', 'test', f'{i}.jpg')])
+                    if do_preprocess:
+                        subprocess.run(["python3", "sea_thru_new.py", "--image",
+                                        os.path.join(output_dir, 'images', 'test', f'{i}.jpg'),
+                                        "--output", os.path.join(output_dir, 'images', 'test', f'{i}.jpg')])
                     #shutil.copyfile(image_files[idx], os.path.join(output_dir, 'images', 'train', f'{i}.jpg'))
         with open(os.path.join(output_dir, 'labels', 'test', f'{i}.txt'), 'w') as f:
             # Parse data from input
