@@ -20,7 +20,6 @@ classes = [
   'PinkFish',
   'SeaDragon',
   'SeaTurtle',
-  'Steinlager',
   'Whale',
   'WhiteShark']
 def match_class(class_name):
@@ -69,6 +68,8 @@ def create_dataset(root_dir, output_dir, split_ratio=[0.6, 0.2, 0.2]):
     # Split image and label files into train/val/test sets
     indices = list(range(len(image_files)))
     random.Random(50).shuffle(indices)
+
+    # Use only half of the indices - downsize
     indices = indices[0:int(len(indices) / 2)]
     num_files = len(indices)
     train_split = int(num_files * split_ratio[0])
