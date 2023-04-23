@@ -2,6 +2,7 @@ import os
 import shutil
 import random
 from PIL import Image
+import subprocess
 
 # TODO: Consider finding all image widths and heights (once per directory) instead of for EVERY image to speed things up
 # NOTE: Estimated time to complete image copying for the entire thing is 60-70 minutes - Should be executed BEFORE a meeting
@@ -10,27 +11,17 @@ from PIL import Image
 # Recommendation: Test training on a small subset of classes and check performance on that before expanding to ALL 21 classes.
 
 classes = [  
-  'ArmyDiver',
   'Ballena',
   'BlueFish',
-  'BoySwimming',
   'CenoteAngelita',
   'DeepSeaFish',
   'Dolphin',
-  'Fisherman',
-  'FishFollowing',
-  'GarryFish',
-  'HoverFish',
-  'JerkbaitBites',
-  'MonsterCreature',
   'Octopus',
   'PinkFish',
-  'SeaDiver',
   'SeaDragon',
   'SeaTurtle',
   'Steinlager',
-  'WhaleAtBeach',
-  'WhaleDiving',
+  'Whale',
   'WhiteShark']
 def match_class(class_name):
     for i in range(len(classes)):
@@ -76,9 +67,10 @@ def create_dataset(root_dir, output_dir, split_ratio=[0.6, 0.2, 0.2]):
                         label_files.append(line)
 
     # Split image and label files into train/val/test sets
-    num_files = len(image_files)
-    indices = list(range(num_files))
+    indices = list(range(len(image_files)))
     random.Random(50).shuffle(indices)
+    indices = indices[0:int(len(indices) / 2)]
+    num_files = len(indices)
     train_split = int(num_files * split_ratio[0])
     val_split = int(num_files * (split_ratio[0] + split_ratio[1]))
     train_indices = indices[:train_split]
@@ -87,7 +79,7 @@ def create_dataset(root_dir, output_dir, split_ratio=[0.6, 0.2, 0.2]):
 
     # Copy image files to output directory and  write label files to output directory
     for i, idx in enumerate(train_indices):     
-        # Get width and height of image - resize to one dimension as 640
+        # pre_process image and copy to output directory
         with Image.open(image_files[idx]) as img:
                     width, height = img.size
                     if width >= height:
@@ -99,6 +91,9 @@ def create_dataset(root_dir, output_dir, split_ratio=[0.6, 0.2, 0.2]):
                     img = img.resize((new_width, new_height))
                     # Save resized img
                     img.save(os.path.join(output_dir, 'images', 'train', f'{i}.jpg'))
+                    subprocess.run(["python3", "sea_thru_new.py", "--image",
+                                     os.path.join(output_dir, 'images', 'train', f'{i}.jpg'),
+                                     "--output", os.path.join(output_dir, 'images', 'train', f'{i}.jpg')])
                     #shutil.copyfile(image_files[idx], os.path.join(output_dir, 'images', 'train', f'{i}.jpg'))
 
         with open(os.path.join(output_dir, 'labels', 'train', f'{i}.txt'), 'w') as f:
@@ -126,6 +121,9 @@ def create_dataset(root_dir, output_dir, split_ratio=[0.6, 0.2, 0.2]):
                     img = img.resize((new_width, new_height))
                     # Save resized img
                     img.save(os.path.join(output_dir, 'images', 'val', f'{i}.jpg'))
+                    subprocess.run(["python3", "sea_thru_new.py", "--image",
+                                     os.path.join(output_dir, 'images', 'val', f'{i}.jpg'),
+                                     "--output", os.path.join(output_dir, 'images', 'val', f'{i}.jpg')])
                     #shutil.copyfile(image_files[idx], os.path.join(output_dir, 'images', 'train', f'{i}.jpg'))
 
         with open(os.path.join(output_dir, 'labels', 'val', f'{i}.txt'), 'w') as f:
@@ -151,6 +149,9 @@ def create_dataset(root_dir, output_dir, split_ratio=[0.6, 0.2, 0.2]):
                     img = img.resize((new_width, new_height))
                     # Save resized img
                     img.save(os.path.join(output_dir, 'images', 'test', f'{i}.jpg'))
+                    subprocess.run(["python3", "sea_thru_new.py", "--image",
+                                     os.path.join(output_dir, 'images', 'test', f'{i}.jpg'),
+                                     "--output", os.path.join(output_dir, 'images', 'test', f'{i}.jpg')])
                     #shutil.copyfile(image_files[idx], os.path.join(output_dir, 'images', 'train', f'{i}.jpg'))
         with open(os.path.join(output_dir, 'labels', 'test', f'{i}.txt'), 'w') as f:
             # Parse data from input
@@ -163,4 +164,4 @@ def create_dataset(root_dir, output_dir, split_ratio=[0.6, 0.2, 0.2]):
             # Write normalized data to file
             f.write(f"{obj_class} {x_center / width} {y_center / height} {box_width / width} {box_height / height}")
 
-create_dataset('./dataset/UOT_raw/', './dataset/UOT_dataset')
+create_dataset('./dataset/UOT_raw/', './dataset/UOT_processed_dataset')

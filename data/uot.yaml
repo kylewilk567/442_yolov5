@@ -16,28 +16,18 @@ test: images/test/  # test images (optional) https://eval.ai/web/challenges/chal
 
 # Classes
 names:
-  0: ArmyDiver
-  1: Ballena
-  2: BlueFish
-  3: BoySwimming
-  4: CenoteAngelita
-  5: DeepSeaFish
-  6: Dolphin
-  7: Fisherman
-  8: FishFollowing
-  9: GarryFish
-  10: HoverFish
-  11: JerkbaitBites
-  12: MonsterCreature
-  13: Octopus
-  14: PinkFish
-  15: SeaDiver
-  16: SeaDragon
-  17: SeaTurtle
-  18: Steinlager
-  19: WhaleAtBeach
-  20: WhaleDiving
-  21: WhiteShark
+  0: Ballena
+  1: BlueFish
+  2: CenoteAngelita
+  3: DeepSeaFish
+  4: Dolphin
+  5: Octopus
+  6: PinkFish
+  7: SeaDragon
+  8: SeaTurtle
+  9: Steinlager
+  10: Whale
+  11: WhiteShark
 
 
 # Download script/URL (optional) ---------------------------------------------------------------------------------------
